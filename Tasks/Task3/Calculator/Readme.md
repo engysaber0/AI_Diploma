@@ -69,13 +69,6 @@ Calculator/
 └── README.md
 ```
 
----
-
-## Requirements
-
-- Python 3.10 or later
-
-The project uses only Python's standard library.
 
 ---
 
