@@ -5,8 +5,7 @@ from scientific import CONSTANTS, get_functions
 from utils import clean_number
 class Calculator:
     """
-    Ties together parsing, scientific functions,memory,and history
-    to provide a complete calculator experience
+    Ties together parsing, scientific functions,memory,and history to provide a complete calculator experience
     """
     def __init__(self):
         self.angle_mode = "DEG"
