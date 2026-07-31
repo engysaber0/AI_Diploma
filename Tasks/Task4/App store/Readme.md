@@ -138,3 +138,6 @@ Products are defined as a plain list of `Product(name, price, stock)` objects â€
 - Only one user account is supported (hardcoded in `main.py` / `Gui.py`).
 - No input sanitization beyond basic type/range checks (e.g., no protection against extremely large quantities).
 
+## Video
+
+[video](https://screenrec.com/share/Nfj32aLHgT)
