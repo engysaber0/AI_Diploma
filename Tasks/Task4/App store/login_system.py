@@ -2,7 +2,6 @@ import random
 class LoginSystem:
     """
     handles the login flow for a user, checking the username, the password, and a random verification code
-
     attributes:
     saved_username (str): the username that is stored
     saved_password (str): the password that is stored

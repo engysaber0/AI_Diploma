@@ -4,10 +4,10 @@ from tkinter import ttk, messagebox
 from login_system import LoginSystem
 from product import Product
 from store import Store
-BG = "#12121c"          # app background
-CARD = "#1b1b2b"        # panel / card background
-CARD_ALT = "#20223a"    # slightly lighter card (rows, inputs)
-BORDER = "#2c2f4a"      # subtle border color
+BG = "#12121c"
+CARD = "#1b1b2b"
+CARD_ALT = "#20223a"
+BORDER = "#2c2f4a"
 ACCENT = "#7c9dff"    
 ACCENT_HOVER = "#93b0ff"
 ACCENT_DARK = "#5a78e0"
@@ -26,10 +26,6 @@ F_BUTTON = (FONT_FAMILY, 10, "bold")
 
 
 class AppWindow:
-    """
-    runs the whole gui app, switching between the login, verify,
-    catalog, checkout, and confirm screens inside one window
-    """
 
     def __init__(self, root):
         self.root = root
@@ -65,14 +61,7 @@ class AppWindow:
         self.current_frame = None
         self.show_login_screen()
 
-    # -----------------------------------------------------------------
-    # styling
-    # -----------------------------------------------------------------
     def _build_style(self):
-        """
-        sets up a single ttk.Style used everywhere so every screen
-        shares the same modern, dark, flat look
-        """
         style = ttk.Style(self.root)
         try:
             style.theme_use("clam")
@@ -81,11 +70,9 @@ class AppWindow:
 
         style.configure(".", background=BG, foreground=TEXT, font=F_BODY)
 
-        # generic frames
         style.configure("TFrame", background=BG)
         style.configure("Card.TFrame", background=CARD)
 
-        # labels
         style.configure("TLabel", background=BG, foreground=TEXT, font=F_BODY)
         style.configure("Title.TLabel", background=BG, foreground=TEXT, font=F_TITLE)
         style.configure("Subtitle.TLabel", background=BG, foreground=TEXT_MUTED, font=F_SUBTITLE)
@@ -94,7 +81,6 @@ class AppWindow:
         style.configure("Card.TLabel", background=CARD, foreground=TEXT, font=F_BODY)
         style.configure("Price.TLabel", background=BG, foreground=SUCCESS, font=(FONT_FAMILY, 18, "bold"))
 
-        # entries
         style.configure(
             "TEntry",
             fieldbackground=CARD_ALT,
@@ -110,7 +96,6 @@ class AppWindow:
         )
         style.map("TEntry", bordercolor=[("focus", ACCENT)])
 
-        # combobox
         style.configure(
             "TCombobox",
             fieldbackground=CARD_ALT,
@@ -124,7 +109,6 @@ class AppWindow:
         self.root.option_add("*TCombobox*Listbox.foreground", TEXT)
         self.root.option_add("*TCombobox*Listbox.selectBackground", ACCENT)
 
-        # buttons
         style.configure(
             "Accent.TButton",
             background=ACCENT,
@@ -167,11 +151,9 @@ class AppWindow:
         )
         style.map("Danger.TButton", background=[("active", "#2a1c24")], bordercolor=[("active", DANGER)])
 
-        # radio buttons
         style.configure("TRadiobutton", background=BG, foreground=TEXT, font=F_BODY)
         style.map("TRadiobutton", foreground=[("active", ACCENT)])
 
-        # treeview (tables)
         style.configure(
             "Treeview",
             background=CARD,
@@ -196,7 +178,6 @@ class AppWindow:
         )
         style.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
 
-        # scrollbar
         style.configure(
             "Vertical.TScrollbar",
             background=CARD_ALT,
@@ -207,10 +188,6 @@ class AppWindow:
         )
 
     def _style_tree_stripes(self, tree):
-        """
-        gives a treeview alternating row colors so long tables are
-        easier to scan
-        """
         tree.tag_configure("odd", background=CARD)
         tree.tag_configure("even", background=CARD_ALT)
 
@@ -219,10 +196,6 @@ class AppWindow:
         tree.insert("", "end", iid=iid, text=text, values=values, tags=(tag,))
 
     def _card(self, parent, **pack_kwargs):
-        """
-        creates a padded, bordered 'card' panel to visually group
-        related content, since plain tkinter has no elevation/shadow
-        """
         outer = tk.Frame(parent, bg=BORDER)
         inner = ttk.Frame(outer, style="Card.TFrame", padding=16)
         inner.pack(fill="both", expand=True, padx=1, pady=1)
@@ -238,13 +211,6 @@ class AppWindow:
             ttk.Label(wrap, text=subtitle, style="Subtitle.TLabel").pack(anchor="w", pady=(4, 0))
 
     def _make_scrollable(self, parent):
-        """
-        wraps a scrollable area (canvas + scrollbar) inside parent and
-        returns an inner frame to pack content into, so screens with
-        long tables or lots of content don't get cut off in a small
-        window. supports mouse-wheel scrolling on Windows/Mac (<MouseWheel>)
-        and Linux (<Button-4>/<Button-5>)
-        """
         container = ttk.Frame(parent)
         container.pack(fill="both", expand=True)
 
@@ -290,14 +256,7 @@ class AppWindow:
 
         return inner
 
-    # -----------------------------------------------------------------
-    # screen management
-    # -----------------------------------------------------------------
     def clear_screen(self):
-        """
-        removes whatever screen is currently showing so a new one
-        can take its place
-        """
         if self.current_frame is not None:
             self.current_frame.destroy()
 
@@ -307,14 +266,7 @@ class AppWindow:
         self.current_frame = frame
         return frame
 
-    # -----------------------------------------------------------------
-    # login
-    # -----------------------------------------------------------------
     def show_login_screen(self):
-        """
-        builds the login screen with a username box and a password
-        box, and a button that checks them
-        """
         self.clear_screen()
         frame = self._new_screen()
         frame.pack_configure(fill="both", expand=True)
@@ -322,7 +274,7 @@ class AppWindow:
         center = ttk.Frame(frame)
         center.place(relx=0.5, rely=0.42, anchor="center")
 
-        self._header(center, "Nova Store", "Sign in to continue")
+        self._header(center, "Pulse Electronics Store", "Sign in to continue")
 
         card = self._card(center, fill="x")
         card.configure(padding=22)
@@ -337,10 +289,6 @@ class AppWindow:
         password_box.pack(fill="x", pady=(6, 18))
 
         def handle_login():
-            """
-            checks the typed username and password and moves on to
-            the verify screen once both are right
-            """
             typed_username = username_box.get()
             typed_password = password_box.get()
 
@@ -358,14 +306,7 @@ class AppWindow:
         password_box.bind("<Return>", lambda e: handle_login())
         ttk.Button(card, text="Log In", style="Accent.TButton", command=handle_login).pack(fill="x")
 
-    # -----------------------------------------------------------------
-    # verify
-    # -----------------------------------------------------------------
     def show_verify_screen(self):
-        """
-        builds the verify screen with a box for the code and a
-        button that checks it
-        """
         self.clear_screen()
         frame = self._new_screen()
 
@@ -383,10 +324,6 @@ class AppWindow:
         code_box.focus_set()
 
         def handle_verify():
-            """
-            checks the typed code and moves on to the catalog screen
-            once it matches
-            """
             typed_code = code_box.get()
             try:
                 typed_code = int(typed_code)
@@ -405,15 +342,7 @@ class AppWindow:
         code_box.bind("<Return>", lambda e: handle_verify())
         ttk.Button(card, text="Verify", style="Accent.TButton", command=handle_verify).pack(fill="x")
 
-    # -----------------------------------------------------------------
-    # catalog
-    # -----------------------------------------------------------------
     def show_catalog_screen(self):
-        """
-        builds the catalog screen with a table of products, boxes
-        for picking a product and a quantity, and a table for the
-        cart so far
-        """
         self.clear_screen()
         frame = self._new_screen()
 
@@ -427,7 +356,6 @@ class AppWindow:
 
         body = self._make_scrollable(frame)
 
-        # ---- product table ----
         table_card = self._card(body, fill="x")
         product_table = ttk.Treeview(table_card, columns=("price", "stock"), show="headings", height=6)
         product_table.heading("price", text="Price ($)")
@@ -451,7 +379,6 @@ class AppWindow:
 
         refresh_product_table()
 
-        # ---- add to cart form ----
         pick_card = self._card(body, fill="x", pady=(14, 0))
         pick_frame = pick_card
 
@@ -465,7 +392,6 @@ class AppWindow:
 
         pick_frame.columnconfigure(0, weight=1)
 
-        # ---- cart table ----
         cart_section = ttk.Frame(body)
         cart_section.pack(fill="x", pady=(16, 0))
         ttk.Label(cart_section, text="Your Cart", style="Section.TLabel").pack(anchor="w", pady=(0, 8))
@@ -485,10 +411,6 @@ class AppWindow:
         cart_table.pack(fill="x")
 
         def refresh_cart_table():
-            """
-            wipes the cart table and fills it back in with whatever
-            is currently in the order list
-            """
             for row in cart_table.get_children():
                 cart_table.delete(row)
             for order_item in self.order_list:
@@ -500,10 +422,6 @@ class AppWindow:
         refresh_cart_table()
 
         def handle_add_to_cart():
-            """
-            checks the product and quantity that were typed in and
-            adds the item to the cart if everything is valid
-            """
             name = name_box.get()
             item = self.store.find_product(name)
             if item is None:
@@ -541,10 +459,6 @@ class AppWindow:
         ).grid(row=2, column=0, columnspan=2, sticky="ew", pady=(14, 0))
 
         def go_to_checkout():
-            """
-            moves to the checkout screen, but only if there is
-            something in the cart
-            """
             if not self.order_list:
                 messagebox.showerror("Checkout", "Cart is empty")
                 return
@@ -554,14 +468,7 @@ class AppWindow:
             side="right"
         )
 
-    # -----------------------------------------------------------------
-    # checkout
-    # -----------------------------------------------------------------
     def show_checkout_screen(self):
-        """
-        builds the checkout screen with the delivery choice and the
-        currency choice, plus a button that works out the total
-        """
         self.clear_screen()
         frame = self._new_screen()
 
@@ -611,11 +518,6 @@ class AppWindow:
         currency_choice.pack(fill="x", pady=(6, 0))
 
         def handle_confirm_order():
-            """
-            works out the final total from the cart, the delivery
-            or pick-up charge, and the chosen currency, then shows
-            the confirm screen
-            """
             shipping_cost = 200 if delivery_choice.get() == "delivery" else 50
             currency = currency_choice.get()
             if currency not in self.store.CURRENCY_RATES:
@@ -635,18 +537,7 @@ class AppWindow:
             side="right"
         )
 
-    # -----------------------------------------------------------------
-    # confirm
-    # -----------------------------------------------------------------
     def show_confirm_screen(self, total, currency):
-        """
-        builds the confirm screen showing the final total price and
-        a message that the order is on its way
-
-        args:
-            total (float): the final total price to show
-            currency (str): the currency code the total is in
-        """
         self.clear_screen()
         frame = self._new_screen()
 
@@ -671,9 +562,6 @@ class AppWindow:
 
 
 def main():
-    """
-    starts the tkinter window and runs the app
-    """
     root = tk.Tk()
     AppWindow(root)
     root.mainloop()
