@@ -140,4 +140,4 @@ Products are defined as a plain list of `Product(name, price, stock)` objects â€
 
 ## Video
 
-[link text](https://screenrec.com/share/Nfj32aLHgT)
+[video](https://screenrec.com/share/Nfj32aLHgT)
